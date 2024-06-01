@@ -1,0 +1,42 @@
+print ('Press enter to start'), input()
+print ('Welcome to Pong')
+lim_izq= (-10)
+lim_der= 10
+x1=0
+x2=0
+ball=int(input())
+if ball<lim_izq:
+    x1+=1
+else:
+    if ball>lim_der:
+        x2+=1
+print ('P1 ',x2,      'P2 ',x1)
+
+#      Interfaz Grafica     #
+
+input()
+from tkinter import *
+root=Tk()
+root.title('Pong')
+root.resizable(0,0)
+fr_frame=Frame(root, width= 900, height=600)
+fr_frame.pack()
+fr_label=Label(fr_frame, text="Welcome", font=('Source Code Pro', 40))
+fr_label.place(x=320,y=20)
+scnd_label=Label(fr_frame, text='P1 =0', font=('Source Code Pro', 20))
+scnd_label.place(x=30, y=100)
+thrd_label=Label(fr_frame, text='P2 = 0', font=('Source Code Pro', 20))
+thrd_label.place(x=770, y=100)
+scnd_frame=Frame(fr_frame, width=10, height=150)
+scnd_frame.pack()
+scnd_frame.config(bg='black')
+scnd_frame.place (x=60, y=300)
+thrd_frame=Frame(fr_frame, width=10, height=150)
+thrd_frame.pack()
+thrd_frame.config(bg='black')
+thrd_frame.place (x=840, y=300)
+frth_frame=Frame(fr_frame, width=10, height=10)
+frth_frame.pack()
+frth_frame.config(bg='black')
+frth_frame.place (x=425, y=375)
+root.mainloop()
