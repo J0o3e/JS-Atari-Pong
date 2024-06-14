@@ -1,0 +1,109 @@
+import sys, pygame 
+pygame.init()
+
+#Variables para los puntajes#
+
+score1=0
+score2=0
+point=1
+
+#Especificaciones del tipo de letra y tamaño de los puntajes#
+
+font=pygame.font.Font(None,36)
+
+#Especificaciones de la ventana de juego#
+size= 1000, 600
+screen=pygame.display.set_mode(size)
+pygame.display.set_caption ('Pong')
+white= 255,255,255
+black= 0,0,0
+
+#Limites en el que la pelota se va a poder mover#
+width,height=1000,600
+speed=[1,1]
+
+#Especificaciones de las redes para los puntajes#
+
+net1=pygame.image.load('Downloads/Net1.png')
+net1rect= net1.get_rect()
+net1rect.move_ip(0,0)
+
+net2=pygame.image.load('Downloads/Net2.png')
+net2rect= net2.get_rect()
+net2rect.move_ip(950,0)
+
+#Especificaciones de la pelota#
+ball=pygame.image.load('Downloads/Ball.png')
+ballrect= ball.get_rect()
+ballrect.move_ip(500,300)
+
+#Especificaciones de las raquetas#
+raquet1=pygame.image.load('Downloads/Raqueta1.png')
+raquet1rect=raquet1.get_rect()
+raquet1rect.move_ip(50,200)
+
+raquet2=pygame.image.load('Downloads/Raqueta2.png')
+raquet2rect=raquet2.get_rect()
+raquet2rect.move_ip(923,200)
+
+#El juego funciona atravez de un bucle infnito#
+run=True 
+while run:
+    
+#Velocidad de la pelota#
+    pygame.time.delay(5)
+    ballrect=ballrect.move(speed)
+
+#Si esque quiero salir del juego#
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT: run=False
+
+#Teclas de mando para los jugadores#
+    Keys=pygame.key.get_pressed()
+    if Keys[pygame.K_w]:
+        raquet1rect=raquet1rect.move(0,-1)
+    if Keys[pygame.K_s]:
+        raquet1rect=raquet1rect.move(0,1)
+
+    if Keys[pygame.K_i]:
+        raquet2rect=raquet2rect.move(0,-1)
+    if Keys[pygame.K_k]:
+        raquet2rect=raquet2rect.move(0,1)
+    
+#Comprobacion de si hubo un choque con las raquetas#
+    if raquet1rect.colliderect(ballrect):
+        speed[0]=-speed[0]
+
+    if raquet2rect.colliderect(ballrect):
+        speed[0]=-speed[0]
+
+#Comprobacion de la pelota si topa los limites#
+    if ballrect.top<0 or ballrect.bottom>height:
+        speed[1]= -speed[1]
+
+#Comprobacion de la pelota topa las redes y se suman los puntos#
+
+    if ballrect.colliderect(net1rect):
+        score2+=point
+        if ballrect.colliderect(net1rect):
+            speed[0]=-speed[0]
+
+    if ballrect.colliderect(net2rect):
+        score1+=point 
+        if ballrect.colliderect(net2rect):
+            speed[0]=-speed[0]
+
+    score1_text=font.render(f'P1:{score1}',True,black)
+    score2_text=font.render(f'P2:{score2}',True,black)
+    screen.fill(white)
+    screen.blit(ball,ballrect)
+    screen.blit(raquet1,raquet1rect)
+    screen.blit(raquet2,raquet2rect)
+    screen.blit(net1,net1rect)
+    screen.blit(net2,net2rect)
+    screen.blit(score1_text,(90,10))
+    screen.blit(score2_text,(850,10))
+
+    pygame.display.flip()
+
+pygame.quit()
