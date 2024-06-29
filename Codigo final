@@ -1,0 +1,143 @@
+import sys, pygame 
+pygame.init()
+
+# Aqui se delimitan las variables para los puntajes
+score1 = 0
+score2 = 0
+max_score = 5  # se elimino el valor punto y se lo cambio por un maximo para determinar un ganador
+
+# Estilo de fuente para el texto de puntaje y game over 
+font = pygame.font.Font(None, 36)
+
+# Especificaciones de la ventana 
+size = 1000, 600
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption('Pong')
+white = 255, 255, 255
+black = 0, 0, 0
+
+# Limites de la pelota 
+width, height = 1000, 600
+speed = [1, 1]
+
+# Aqui es donde se encuentran las imagenes y los rectangulos de las imagenes 
+net1 = pygame.image.load('Downloads/Net1.png')
+net1rect = net1.get_rect()
+net1rect.move_ip(0, 0)
+
+net2 = pygame.image.load('Downloads/Net2.png')
+net2rect = net2.get_rect()
+net2rect.move_ip(950, 0)
+
+ball = pygame.image.load('Downloads/Ball.png')
+ballrect = ball.get_rect()
+ballrect.move_ip(500, 300)
+
+raquet1 = pygame.image.load('Downloads/Raqueta1.png')
+raquet1rect = raquet1.get_rect()
+raquet1rect.move_ip(50, 200)
+
+raquet2 = pygame.image.load('Downloads/Raqueta2.png')
+raquet2rect = raquet2.get_rect()
+raquet2rect.move_ip(923, 200)
+
+# Se añadio velocidad a las raquetas 
+raquet_speed = 2
+
+# Game loop
+run = True
+game_over = False
+winner = None
+
+while run:
+    
+    # Se utiliza para retrasar el moviemiento de la pelota 
+    pygame.time.delay(5)
+    
+    if not game_over:
+        # Como se va a mover la pelota 
+        ballrect = ballrect.move(speed)
+
+        # Para poder ejecutar salir del juego 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        # Como funcionan los controles de los jugadores 
+        keys = pygame.key.get_pressed()
+        
+        # Jugador 1 controla la raqueta con w para arriba y s para abajo
+        if keys[pygame.K_w]:
+            raquet1rect.y -= raquet_speed
+            if raquet1rect.top < 0:  # Se añadio esta linea para limitar el movieminto de las raquetas 
+                raquet1rect.top = 0
+        if keys[pygame.K_s]:
+            raquet1rect.y += raquet_speed
+            if raquet1rect.bottom > height:  # Checa el limite de la raqueta inferior 
+                raquet1rect.bottom = height
+
+        # Jugador 2 controla la raqueta con i para arriba y k para abajo 
+        if keys[pygame.K_i]:
+            raquet2rect.y -= raquet_speed
+            if raquet2rect.top < 0:  # Se añadio esta linea para limitar el movieminto de las raquetas 
+                raquet2rect.top = 0
+        if keys[pygame.K_k]:
+            raquet2rect.y += raquet_speed
+            if raquet2rect.bottom > height:  # Checa el limite de la raqueta inferior 
+                raquet2rect.bottom = height
+
+        # Comprobacion de colision de la pelota contra las raquetas 
+        if raquet1rect.colliderect(ballrect):
+            speed[0] = -speed[0]
+
+        if raquet2rect.colliderect(ballrect):
+            speed[0] = -speed[0]
+
+        # Comprobacion de colision de la pelota con los limites 
+        if ballrect.top < 0 or ballrect.bottom > height:
+            speed[1] = -speed[1]
+
+        # Comprobacion de la pelota con las redes 
+        if ballrect.colliderect(net1rect):
+            speed[0] = -speed[0]  
+            ballrect.center = (500, 300)  # Se añadio esta linea de codigo para reubicar la pelota al centro en caso de que toque una red
+            score2 += 1  # Esta linea permite que se sume solo un punto con cada colision de la pelota contra la red
+
+            if score2 >= max_score:
+                game_over = True
+                winner = "Player 2"
+
+        if ballrect.colliderect(net2rect):
+            speed[0] = -speed[0]  
+            ballrect.center = (500, 300)  
+            score1 += 1  
+
+            if score1 >= max_score:
+                game_over = True
+                winner = "Player 1"
+
+        # Renderizacion de puntajes 
+        score1_text = font.render(f'P1: {score1}', True, black)
+        score2_text = font.render(f'P2: {score2}', True, black)
+
+        # Se dibujan los objetos en la pantalla
+        screen.fill(white)
+        screen.blit(ball, ballrect)
+        screen.blit(raquet1, raquet1rect)
+        screen.blit(raquet2, raquet2rect)
+        screen.blit(net1, net1rect)
+        screen.blit(net2, net2rect)
+        screen.blit(score1_text, (90, 10))
+        screen.blit(score2_text, (850, 10))
+
+    else:
+        # Pantalla final de end game 
+        end_font = pygame.font.Font(None, 50)
+        end_text = end_font.render(f'GAME OVER - {winner} wins!', True, black)
+        screen.blit(end_text, (250, 250))
+
+    # Para que siempre se actualice el juego 
+    pygame.display.flip()
+
+# Salir del juego 
+pygame.quit()
