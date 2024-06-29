@@ -12,8 +12,7 @@ Si esque crees ya tener instalado pygame, basta con entrar al visualizador de co
 Si esque aparece error necesitas descargarlo. 
 
 Para el adecuado funciamiento se necesita descargar las imagenes que se van a usar para el juego, y ubicarlas en la carpeta de descargas. 
-Encuentra aqui los links de descarga: 
-
+Encuentra todas las imagenes necesarias en la carpeta objetos.
 
 Diagramas y videos de funcionamiento: 
 
